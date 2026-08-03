@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://TU-DOMINIO.com/</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://TU-DOMINIO.com/images/fondo.jpeg</image:loc>
+      <image:title>Raicilla Hnos. Arrizón — Sierra de La Vieja, Mascota, Jalisco</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://TU-DOMINIO.com/images/producto-1.jpg</image:loc>
+      <image:title>Raicilla Hnos. Arrizón Blanco 750 ml</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://TU-DOMINIO.com/images/producto-2.jpg</image:loc>
+      <image:title>Raicilla Hnos. Arrizón Madurada en Vidrio 750 ml</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://TU-DOMINIO.com/images/producto-3.jpg</image:loc>
+      <image:title>Raicilla Hnos. Arrizón Blanco 250 ml</image:title>
+    </image:image>
+    <image:image>
+      <image:loc>https://TU-DOMINIO.com/images/producto-4.jpg</image:loc>
+      <image:title>Ponches Artesanales de Raicilla Hnos. Arrizón</image:title>
+    </image:image>
+  </url>
+</urlset>
