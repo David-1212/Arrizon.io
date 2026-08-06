@@ -134,75 +134,28 @@ const counterObserver = new IntersectionObserver(
 );
 $$(".counter").forEach((el) => counterObserver.observe(el));
 
-/* ============ CARRUSEL HISTORIA (estilo Netflix: fila desplazable + autoplay) ============ */
-const historyTrack = $("#historyTrack");
-const hPrev = $("#hPrev");
-const hNext = $("#hNext");
-if (historyTrack && hPrev && hNext) {
-  const AUTOPLAY_MS = 4500; // 0 = desactiva el avance automático
-  const GAP = 16;
-  let timer = null;
+/* ============ HISTORIA: navegación de capítulos + scrollspy ============ */
+const tlNav = $("#tlNav");
+const tlFlow = $("#tlFlow");
+if (tlNav && tlFlow) {
+  const tlItems = $$(".tl-nav__item", tlNav);
+  const tlCards = $$(".tl-card", tlFlow);
 
-  const stepX = () => {
-    const c = historyTrack.querySelector(".hcard");
-    return c ? c.offsetWidth + GAP : 300;
-  };
-  const atEnd = () => historyTrack.scrollLeft >= historyTrack.scrollWidth - historyTrack.clientWidth - 4;
-  const atStart = () => historyTrack.scrollLeft <= 4;
-
-  const updateBtns = () => {
-    hPrev.disabled = atStart();
-    hNext.disabled = atEnd();
-  };
-
-  const moveBy = (cards) => historyTrack.scrollBy({ left: cards * stepX(), behavior: "smooth" });
-
-  const start = () => {
-    stop();
-    if (AUTOPLAY_MS > 0) {
-      timer = setInterval(() => {
-        if (atEnd()) historyTrack.scrollTo({ left: 0, behavior: "smooth" });
-        else moveBy(1);
-      }, AUTOPLAY_MS);
-    }
-  };
-  const stop = () => { if (timer) clearInterval(timer); timer = null; };
-
-  hPrev.addEventListener("click", () => { stop(); moveBy(-1); start(); });
-  hNext.addEventListener("click", () => { stop(); moveBy(1); start(); });
-
-  historyTrack.addEventListener("scroll", updateBtns, { passive: true });
-
-  /* Arrastre con mouse (en táctil se usa el scroll nativo de Netflix) */
-  historyTrack.addEventListener("pointerdown", (e) => {
-    if (e.pointerType !== "mouse" || e.button !== 0) return;
-    stop();
-    historyTrack.classList.add("is-dragging");
-    const startX = e.clientX;
-    const startScroll = historyTrack.scrollLeft;
-    const onMove = (ev) => { historyTrack.scrollLeft = startScroll - (ev.clientX - startX); };
-    const onUp = () => {
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerup", onUp);
-      window.removeEventListener("pointercancel", onUp);
-      historyTrack.classList.remove("is-dragging");
-      updateBtns();
-      start();
-    };
-    window.addEventListener("pointermove", onMove);
-    window.addEventListener("pointerup", onUp);
-    window.addEventListener("pointercancel", onUp);
+  tlItems.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = $("#" + btn.dataset.target, tlFlow);
+      if (target) target.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
   });
 
-  historyTrack.addEventListener("mouseenter", stop);
-  historyTrack.addEventListener("mouseleave", start);
-  historyTrack.addEventListener("focusin", stop);
-  historyTrack.addEventListener("focusout", start);
-  historyTrack.addEventListener("touchstart", stop, { passive: true });
-  historyTrack.addEventListener("touchend", start, { passive: true });
-
-  updateBtns();
-  start();
+  const tlSpy = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      const id = e.target.id;
+      tlItems.forEach((b) => b.classList.toggle("is-active", b.dataset.target === id));
+    });
+  }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+  tlCards.forEach((c) => tlSpy.observe(c));
 }
 
 /* ============ PARALLAX HERO ============ */

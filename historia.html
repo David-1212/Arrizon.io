@@ -29,7 +29,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Manrope:wght@400;500;600;700;800&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=41">
+  <link rel="stylesheet" href="css/styles.css?v=42">
 </head>
 <body>
 
@@ -73,104 +73,138 @@
       </div>
     </section>
 
-    <!-- ============ CRONOLOGÍA / CARRUSEL ============ -->
-    <section id="historia" class="section timeline-sec">
+    <!-- ============ CRONOLOGÍA / TIMELINE EDITORIAL ============ -->
+    <section id="historia" class="section historia">
       <div class="container">
-        <div class="timeline-sec__head">
-          <span class="kicker reveal">Cronología y fotos</span>
-          <h2 class="section-title reveal">Inicio en Navidad y posicionamiento en La Vieja hasta la actualidad</h2>
-          <p class="reveal">Origen · familia · La Vieja · generación a generación · formalización · marca · eventos.</p>
+        <div class="historia__head">
+          <span class="kicker reveal">Cronología</span>
+          <h2 class="section-title reveal">Nueve décadas, ocho momentos</h2>
+          <p class="reveal">Origen · familia · La Vieja · generación a generación · formalización · marca · festivales.</p>
         </div>
 
-        <div class="history-carousel reveal" id="historyCarousel">
-          <div class="history-carousel__track" id="historyTrack">
-            <article class="hcard">
-              <div class="hcard__media">
-                <img src="images/botella_cristalino.jpg" alt="Raicilla Hnos. Arrizón, el destilado que nació en la mina" decoding="async">
-                <span class="hcard__year">1932</span>
+        <nav class="tl-nav reveal" id="tlNav" aria-label="Navegación por años">
+          <button class="tl-nav__item" type="button" data-target="tl-1"><span class="tl-nav__num">1932</span><span class="tl-nav__name">Origen</span></button>
+          <button class="tl-nav__item" type="button" data-target="tl-2"><span class="tl-nav__num">Familia</span><span class="tl-nav__name">Herencia</span></button>
+          <button class="tl-nav__item" type="button" data-target="tl-3"><span class="tl-nav__num">La Vieja</span><span class="tl-nav__name">Destilería</span></button>
+          <button class="tl-nav__item" type="button" data-target="tl-4"><span class="tl-nav__num">3ª Gen</span><span class="tl-nav__name">Maestros</span></button>
+          <button class="tl-nav__item" type="button" data-target="tl-5"><span class="tl-nav__num">2019</span><span class="tl-nav__name">D.O.</span></button>
+          <button class="tl-nav__item" type="button" data-target="tl-6"><span class="tl-nav__num">Marca</span><span class="tl-nav__name">Registro</span></button>
+          <button class="tl-nav__item" type="button" data-target="tl-7"><span class="tl-nav__num">Navidad</span><span class="tl-nav__name">Festival</span></button>
+          <button class="tl-nav__item" type="button" data-target="tl-8"><span class="tl-nav__num">Hoy</span><span class="tl-nav__name">Presente</span></button>
+        </nav>
+
+        <div class="tl-flow" id="tlFlow">
+          <article class="tl-card reveal" id="tl-1" data-year="1932">
+            <div class="tl-card__media">
+              <div class="tl-card__media-img">
+                <img src="images/botella_cristalino.jpg" alt="Raicilla Hnos. Arrizón, el destilado que nació en la mina" loading="lazy" decoding="async">
+                <span class="tl-card__year">1932</span>
               </div>
-              <div class="hcard__body">
-                <h3>Origen · El sueño de Cananea</h3>
-                <p>Blas Arrizón aprende la destilación del agave en las minas de Cananea, Sonora, y al volver a Jalisco la aplica al <strong>agave maximiliana</strong>: nace la raicilla Arrizón.</p>
+            </div>
+            <div class="tl-card__body">
+              <span class="tl-card__badge">Origen · El sueño de Cananea</span>
+              <h3>El sueño de Cananea</h3>
+              <p>Blas Arrizón aprende la destilación del agave en las minas de Cananea, Sonora, y al volver a Jalisco la aplica al <strong>agave maximiliana</strong>: nace la raicilla Arrizón.</p>
+            </div>
+          </article>
+
+          <article class="tl-card reveal" id="tl-2" data-year="Familia">
+            <div class="tl-card__media">
+              <div class="tl-card__media-img">
+                <img src="images/agave1.jpg" alt="El saber de la destilación se guarda como un tesoro familiar" loading="lazy" decoding="async">
+                <span class="tl-card__year">Familia</span>
               </div>
-            </article>
-            <article class="hcard">
-              <div class="hcard__media">
-                <img src="images/agave1.jpg" alt="El saber de la destilación se guarda como un tesoro familiar" decoding="async">
-                <span class="hcard__year">Familia</span>
+            </div>
+            <div class="tl-card__body">
+              <span class="tl-card__badge">Herencia familiar</span>
+              <h3>Una herencia que se guarda</h3>
+              <p>Durante décadas la raicilla se destila en secreto, para la familia y el pueblo. El saber se guarda como un tesoro.</p>
+            </div>
+          </article>
+
+          <article class="tl-card reveal" id="tl-3" data-year="La Vieja">
+            <div class="tl-card__media">
+              <div class="tl-card__media-img">
+                <img src="images/fondo.jpeg" alt="La sierra de La Vieja, Mascota, Jalisco" loading="lazy" decoding="async">
+                <span class="tl-card__year">La Vieja</span>
               </div>
-              <div class="hcard__body">
-                <h3>Una herencia que se guarda</h3>
-                <p>Durante décadas la raicilla se destila en secreto, para la familia y el pueblo. El saber se guarda como un tesoro.</p>
+            </div>
+            <div class="tl-card__body">
+              <span class="tl-card__badge">El corazón de la destilería</span>
+              <h3>La Taberna La Vieja</h3>
+              <p>En el rancho de La Vieja, en la sierra de Mascota, se levanta la <strong>Taberna La Vieja</strong>, donde el agave se convierte en destilado.</p>
+            </div>
+          </article>
+
+          <article class="tl-card reveal" id="tl-4" data-year="3ª Gen">
+            <div class="tl-card__media">
+              <div class="tl-card__media-img">
+                <img src="images/maestros.jpg" alt="Gilberto y Antonio Arrizón Delgadillo, maestros raicilleros" loading="lazy" decoding="async">
+                <span class="tl-card__year">3ª Gen</span>
               </div>
-            </article>
-            <article class="hcard">
-              <div class="hcard__media">
-                <img src="images/fondo.jpeg" alt="La sierra de La Vieja, Mascota, Jalisco" decoding="async">
-                <span class="hcard__year">La Vieja</span>
+            </div>
+            <div class="tl-card__body">
+              <span class="tl-card__badge">Generación a generación</span>
+              <h3>Los maestros raicilleros</h3>
+              <p>Gilberto y Antonio Arrizón Delgadillo recogen el saber familiar y se convierten en los <strong>maestros raicilleros</strong> de hoy.</p>
+            </div>
+          </article>
+
+          <article class="tl-card reveal" id="tl-5" data-year="2019">
+            <div class="tl-card__media">
+              <div class="tl-card__media-img">
+                <img src="images/botella 2.jpg" alt="Raicilla Hnos. Arrizón y la Denominación de Origen" loading="lazy" decoding="async">
+                <span class="tl-card__year">2019</span>
               </div>
-              <div class="hcard__body">
-                <h3>El corazón de la destilería</h3>
-                <p>En el rancho de La Vieja, en la sierra de Mascota, se levanta la <strong>Taberna La Vieja</strong>, donde el agave se convierte en destilado.</p>
+            </div>
+            <div class="tl-card__body">
+              <span class="tl-card__badge">Formalización · D.O.</span>
+              <h3>La Denominación de Origen</h3>
+              <p>La raicilla obtiene su <strong>Denominación de Origen</strong> en junio de 2019 y la familia se formaliza como marca reconocida.</p>
+            </div>
+          </article>
+
+          <article class="tl-card reveal" id="tl-6" data-year="Marca">
+            <div class="tl-card__media">
+              <div class="tl-card__media-img">
+                <img src="images/logo.png" alt="Marca Raicilla Hnos. Arrizón" loading="lazy" decoding="async">
+                <span class="tl-card__year">Marca</span>
               </div>
-            </article>
-            <article class="hcard">
-              <div class="hcard__media">
-                <img src="images/maestros.jpg" alt="Gilberto y Antonio Arrizón Delgadillo, maestros raicilleros" decoding="async">
-                <span class="hcard__year">3ª Gen</span>
+            </div>
+            <div class="tl-card__body">
+              <span class="tl-card__badge">Hnos. Arrizón · Primer registro</span>
+              <h3>La marca</h3>
+              <p>La marca se consolida como el <strong>primer registro de la raicilla en Mascota</strong>, con botellas que cruzan fronteras.</p>
+            </div>
+          </article>
+
+          <article class="tl-card reveal" id="tl-7" data-year="Navidad">
+            <div class="tl-card__media">
+              <div class="tl-card__media-img">
+                <img src="images/agave 4.jpg" alt="Sandra Arrizón en el XII Festival de la Raicilla" loading="lazy" decoding="async">
+                <span class="tl-card__year">Navidad</span>
               </div>
-              <div class="hcard__body">
-                <h3>Generación a generación</h3>
-                <p>Gilberto y Antonio Arrizón Delgadillo recogen el saber familiar y se convierten en los <strong>maestros raicilleros</strong> de hoy.</p>
+            </div>
+            <div class="tl-card__body">
+              <span class="tl-card__badge">El primer gran escaparate</span>
+              <h3>Embajadora de la Raicilla</h3>
+              <p>En el <strong>XII Festival de la Raicilla</strong>, Sandra Arrizón es coronada <strong>Embajadora de la Raicilla</strong>.</p>
+            </div>
+          </article>
+
+          <article class="tl-card reveal" id="tl-8" data-year="Hoy">
+            <div class="tl-card__media">
+              <div class="tl-card__media-img">
+                <img src="images/productos/madurado-cutout.png" alt="Raicilla Hnos. Arrizón Madurada en Vidrio" loading="lazy" decoding="async">
+                <span class="tl-card__year">Hoy</span>
               </div>
-            </article>
-            <article class="hcard">
-              <div class="hcard__media">
-                <img src="images/botella 2.jpg" alt="Raicilla Hnos. Arrizón y la Denominación de Origen" decoding="async">
-                <span class="hcard__year">2019</span>
-              </div>
-              <div class="hcard__body">
-                <h3>Formalización · D.O.</h3>
-                <p>La raicilla obtiene su <strong>Denominación de Origen</strong> en junio de 2019 y la familia se formaliza como marca reconocida.</p>
-              </div>
-            </article>
-            <article class="hcard">
-              <div class="hcard__media">
-                <img src="images/logo.png" alt="Marca Raicilla Hnos. Arrizón" decoding="async">
-                <span class="hcard__year">Marca</span>
-              </div>
-              <div class="hcard__body">
-                <h3>Hnos. Arrizón · Primer registro</h3>
-                <p>La marca se consolida como el <strong>primer registro de la raicilla en Mascota</strong>, con botellas que cruzan fronteras.</p>
-              </div>
-            </article>
-            <article class="hcard">
-              <div class="hcard__media">
-                <img src="images/agave 4.jpg" alt="Raicilla Hnos. Arrizón en festivales y ferias" decoding="async">
-                <span class="hcard__year">Navidad</span>
-              </div>
-              <div class="hcard__body">
-                <h3>El primer gran escaparate</h3>
-                <p>En el <strong>XII Festival de la Raicilla</strong>, Sandra Arrizón es coronada <strong>Embajadora de la Raicilla</strong>.</p>
-              </div>
-            </article>
-            <article class="hcard">
-              <div class="hcard__media">
-                <img src="images/producto-2.jpg" alt="Raicilla Hnos. Arrizón Madurada en Vidrio" decoding="async">
-                <span class="hcard__year">Hoy</span>
-              </div>
-              <div class="hcard__body">
-                <h3>De La Vieja para el mundo</h3>
-                <p>Festivales, ferias, coctelería y exportación: posicionados desde la sierra de La Vieja hasta la actualidad, sin perder el origen.</p>
-              </div>
-            </article>
-          </div>
-          <button class="history-carousel__nav history-carousel__nav--prev" id="hPrev" type="button" aria-label="Anterior">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
-          </button>
-          <button class="history-carousel__nav history-carousel__nav--next" id="hNext" type="button" aria-label="Siguiente">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-          </button>
+            </div>
+            <div class="tl-card__body">
+              <span class="tl-card__badge">De La Vieja para el mundo</span>
+              <h3>El presente</h3>
+              <p>Festivales, ferias, coctelería y exportación: posicionados desde la sierra de La Vieja hasta la actualidad, sin perder el origen.</p>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -260,6 +294,6 @@
     <span>Pedir por WhatsApp</span>
   </a>
 
-  <script src="js/main.js?v=41"></script>
+  <script src="js/main.js?v=42"></script>
 </body>
 </html>
