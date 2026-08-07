@@ -8,18 +8,32 @@ const CONTACT = {
   whatsappDisplay: "+52 388 105 8508",
   phoneDisplay: "+52 388 105 5998",
   phoneTel: "+523881055998",
-  email: "raicillahnosarrizon@gmail.com", // TODO: reemplaza con el correo real
+  email: "hnos.arrizon.raicilla@gmail.com",
   facebook: "https://www.facebook.com/Hnos.Arrizon",
-  instagram: "https://www.instagram.com/hnos.arrizon", // TODO: verifica el handle real
-  tiktok: "https://www.tiktok.com/@hnos.arrizon",      // TODO: verifica el handle real
+  instagram: "https://www.instagram.com/hnos_arrizon/",
+  tiktok: "https://www.tiktok.com/@hnos_arrizon",
   mapLink: "https://www.google.com/maps?q=Rancho+La+Vieja,+Mascota,+Jalisco,+Mexico",
 };
 
 const wa = (msg) => `https://wa.me/${CONTACT.whatsappNumber}?text=${encodeURIComponent(msg)}`;
+const waShare = (msg) => `https://wa.me/?text=${encodeURIComponent(msg)}`;
 
 /* ============ Utilidades ============ */
 const $ = (sel, ctx = document) => ctx.querySelector(sel);
 const $$ = (sel, ctx = document) => [...ctx.querySelectorAll(sel)];
+
+/* ============ Página activa en el menú según la URL ============ */
+(() => {
+  const file = (location.pathname.split("/").pop() || "").toLowerCase();
+  const current = file && file !== "/" ? file : "index.html";
+  document.querySelectorAll(".nav__links a:not(.nav__cta), .footer__links a").forEach((a) => {
+    const href = ((a.getAttribute("href") || "").split("?")[0].split("#")[0]).toLowerCase();
+    if (href === current) {
+      a.classList.add("is-active");
+      a.setAttribute("aria-current", "page");
+    }
+  });
+})();
 
 document.querySelectorAll("section[id]").forEach((el) => (el.style.scrollMarginTop = "88px"));
 
@@ -33,9 +47,10 @@ const AGE_KEY = "arrizon_age_verified";
 function initAgeGate() {
   if (!ageGate) return;
   const already = localStorage.getItem(AGE_KEY) === "yes";
-  if (!already) {
+  if (already) {
+    ageGate.classList.add("is-hidden");
+  } else {
     lockScroll(true);
-    ageGate.classList.remove("is-hidden");
   }
   const yes = $("#ageYes");
   const no = $("#ageNo");
@@ -111,6 +126,7 @@ const revealObserver = new IntersectionObserver(
 $$(".reveal").forEach((el) => revealObserver.observe(el));
 
 /* ============ CONTADORES ============ */
+const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const counterObserver = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
@@ -118,6 +134,11 @@ const counterObserver = new IntersectionObserver(
       const el = entry.target;
       const target = +el.dataset.target;
       const suffix = el.dataset.suffix || "";
+      if (prefersReducedMotion) {
+        el.textContent = target + suffix;
+        counterObserver.unobserve(el);
+        return;
+      }
       const dur = 1600;
       const start = performance.now();
       const tick = (now) => {
@@ -141,6 +162,14 @@ if (tlNav && tlFlow) {
   const tlItems = $$(".tl-nav__item", tlNav);
   const tlCards = $$(".tl-card", tlFlow);
 
+  const centerNav = (nav, item) => {
+    if (!item) return;
+    const iRect = item.getBoundingClientRect();
+    const nRect = nav.getBoundingClientRect();
+    const left = nav.scrollLeft + (iRect.left - nRect.left) - (nRect.width - iRect.width) / 2;
+    nav.scrollTo({ left, behavior: "smooth" });
+  };
+
   tlItems.forEach((btn) => {
     btn.addEventListener("click", () => {
       const target = $("#" + btn.dataset.target, tlFlow);
@@ -152,7 +181,11 @@ if (tlNav && tlFlow) {
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
       const id = e.target.id;
-      tlItems.forEach((b) => b.classList.toggle("is-active", b.dataset.target === id));
+      tlItems.forEach((b) => {
+        const active = b.dataset.target === id;
+        b.classList.toggle("is-active", active);
+        if (active) centerNav(tlNav, b);
+      });
     });
   }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
   tlCards.forEach((c) => tlSpy.observe(c));
@@ -161,12 +194,13 @@ if (tlNav && tlFlow) {
 /* ============ PARALLAX HERO ============ */
 const heroBg = $(".hero__bg");
 window.addEventListener("scroll", () => {
-  if (heroBg) heroBg.style.transform = `translateY(${window.scrollY * 0.18}px)`;
+  if (heroBg && !prefersReducedMotion) heroBg.style.transform = `translateY(${window.scrollY * 0.18}px)`;
 }, { passive: true });
 
 /* ============ TILT EN TARJETAS ============ */
 $$(".pcard").forEach((card) => {
   card.addEventListener("mousemove", (e) => {
+    if (prefersReducedMotion) return;
     const r = card.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width - 0.5;
     const y = (e.clientY - r.top) / r.height - 0.5;
@@ -198,8 +232,31 @@ function wireLinks() {
   set("fbLink2", CONTACT.facebook);
   set("igLink2", CONTACT.instagram);
   set("ttLink2", CONTACT.tiktok);
+  set("footerWa", wa("Hola, quiero pedir Raicilla Hnos. Arrizón."));
+  set("footerWa2", wa("Hola, quiero pedir Raicilla Hnos. Arrizón."));
+  set("footerTel", `tel:${CONTACT.phoneTel}`);
+  set("footerMail", `mailto:${CONTACT.email}?subject=${encodeURIComponent("Información sobre Raicilla Hnos. Arrizón")}`);
+  set("footerMap", CONTACT.mapLink);
 }
 wireLinks();
+
+/* Botones "Compartir por WhatsApp" de cada producto */
+$$(".wa-share").forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const card = btn.closest(".shopcard");
+    const p = PRODUCTOS[card?.dataset.slug];
+    let msg;
+    if (p) {
+      msg = `Te comparto ${p.nombre} (${p.formato}) de Raicilla Hnos. Arrizón — raicilla artesanal de la Sierra de La Vieja, Mascota, Jalisco. Detalles: https://arrizon.mx/productos.html`;
+    } else {
+      const heading = card?.querySelector("h3");
+      const label = heading ? heading.textContent.trim().replace(/\s+/g, " ") : "producto";
+      msg = `Te comparto ${label} de Raicilla Hnos. Arrizón. Detalles: https://arrizon.mx/productos.html`;
+    }
+    window.open(waShare(msg), "_blank", "noopener");
+  });
+});
 
 /* Botones "Pedir por WhatsApp" de cada producto */
 $$(".wa-order").forEach((btn) => {
@@ -221,7 +278,7 @@ $$(".wa-order").forEach((btn) => {
 const PRODUCTOS = {
   "blanco-750": {
     nombre: "Raicilla Blanco", formato: "750 ml · 45% Alc. Vol.", tag: "Clásica", precio: 350,
-    img: "images/productos/raicilla_normal-cutout.png",
+    img: "images/productos/raicilla_normal-cutout.webp",
     desc: "Nuestra raicilla insignia. 100% agave maximiliana de la sierra, destilada a mano en la Taberna La Vieja.",
     notas: [
       ["Vista", "Transparente, brillante"],
@@ -232,7 +289,7 @@ const PRODUCTOS = {
   },
   "madurada": {
     nombre: "Madurada en Vidrio", formato: "750 ml · 45% Alc. Vol.", tag: "Edición especial", precio: 550,
-    img: "images/productos/madurado-cutout.png",
+    img: "images/productos/madurado-cutout.webp",
     desc: "Reposa en vidrio durante al menos 6 meses, un sello de nuestra casa: la maduración sin roble suaviza y redondea el destilado.",
     notas: [
       ["Vista", "Limpiada, lágrima fina"],
@@ -243,7 +300,7 @@ const PRODUCTOS = {
   },
   "blanco-250": {
     nombre: "Raicilla Blanco", formato: "250 ml · 45% Alc. Vol.", tag: "Degustación", precio: 150,
-    img: "images/productos/pachita-cutout.png",
+    img: "images/productos/pachita-cutout.webp",
     desc: "El mismo carácter de la sierra en formato viaje y degustación. Ideal para regalar, probar o llevar contigo.",
     notas: [
       ["Vista", "Transparente"],
@@ -254,7 +311,7 @@ const PRODUCTOS = {
   },
   "ponche-jamaica": {
     nombre: "Ponche de Jamaica", formato: "Macerado artesanal", tag: "Frutal", precio: 250,
-    img: "images/productos/jamaica-cutout.png",
+    img: "images/productos/jamaica-cutout.webp",
     desc: "Flor de jamaica macerada con raicilla; ácida, refrescante y profunda.",
     notas: [
       ["Sabor", "Floral, ácida y refrescante"],
@@ -264,7 +321,7 @@ const PRODUCTOS = {
   },
   "ponche-mango": {
     nombre: "Ponche de Mango", formato: "Macerado artesanal", tag: "Frutal", precio: 250,
-    img: "images/productos/mango-cutout.png",
+    img: "images/productos/mango-cutout.webp",
     desc: "Mango maduro; tropical, cremoso y de trago largo.",
     notas: [
       ["Sabor", "Tropical y cremoso"],
@@ -274,7 +331,7 @@ const PRODUCTOS = {
   },
   "ponche-tamarindo": {
     nombre: "Ponche de Tamarindo", formato: "Macerado artesanal", tag: "Frutal", precio: 250,
-    img: "images/productos/tamarindo-cutout.png",
+    img: "images/productos/tamarindo-cutout.webp",
     desc: "Tamarindo agrio-dulce; cuerpo medio y carácter generoso.",
     notas: [
       ["Sabor", "Agrio-dulce, cuerpo medio"],
@@ -284,7 +341,7 @@ const PRODUCTOS = {
   },
   "ponche-maracuya": {
     nombre: "Ponche de Maracuyá", formato: "Macerado artesanal", tag: "Frutal", precio: 250,
-    img: "images/productos/maracuya-cutout.png",
+    img: "images/productos/maracuya-cutout.webp",
     desc: "Maracuyá silvestre; cítrico, vibrante y con semillas crujientes.",
     notas: [
       ["Sabor", "Cítrico y vibrante"],
@@ -294,13 +351,53 @@ const PRODUCTOS = {
   },
   "licor-cafe": {
     nombre: "Licor de Café", formato: "Macerado artesanal", tag: "Especial", precio: 250,
-    img: "images/productos/cafe-cutout.png",
+    img: "images/productos/cafe-cutout.webp",
     desc: "Café de altura de la región; tostado, cálido y con cuerpo. Perfecto para la sobremesa.",
     notas: [
       ["Sabor", "Tostado y cálido"],
       ["Maridaje", "Postres y sobremesa"],
     ],
     chips: ["Café de la región", "Macerado artesanal"],
+  },
+  "ponche-arrayan": {
+    nombre: "Ponche de Arrayán", formato: "Macerado artesanal", tag: "Frutal", precio: 250,
+    img: "images/productos/arrayan-cutout.webp",
+    desc: "Arrayán silvestre de la sierra; herbal, dulce y de carácter único.",
+    notas: [
+      ["Sabor", "Herbal y dulce"],
+      ["Maridaje", "Quesos y frutas secas"],
+    ],
+    chips: ["Raicilla + arrayán", "Macerado artesanal"],
+  },
+  "ponche-guayaba-agria": {
+    nombre: "Ponche de Guayaba Agria", formato: "Macerado artesanal", tag: "Frutal", precio: 250,
+    img: "images/productos/guayaba-agria-cutout.webp",
+    desc: "Guayaba agria de la región; ácida, aromática y refrescante.",
+    notas: [
+      ["Sabor", "Ácida y aromática"],
+      ["Maridaje", "Comida picante y cítricos"],
+    ],
+    chips: ["Raicilla + guayaba agria", "Macerado artesanal"],
+  },
+  "ponche-limon": {
+    nombre: "Ponche de Limón", formato: "Macerado artesanal", tag: "Frutal", precio: 250,
+    img: "images/productos/limon-cutout.webp",
+    desc: "Limón amarillo; cítrico, brillante y vibrante en nariz y boca.",
+    notas: [
+      ["Sabor", "Cítrico y brillante"],
+      ["Maridaje", "Mariscos y ensaladas"],
+    ],
+    chips: ["Raicilla + limón", "Macerado artesanal"],
+  },
+  "ponche-membrillo": {
+    nombre: "Ponche de Membrillo", formato: "Macerado artesanal", tag: "Frutal", precio: 250,
+    img: "images/productos/membrillo-cutout.webp",
+    desc: "Membrillo maduro; dulce, floral y de cuerpo generoso.",
+    notas: [
+      ["Sabor", "Dulce y floral"],
+      ["Maridaje", "Postres y quesos"],
+    ],
+    chips: ["Raicilla + membrillo", "Macerado artesanal"],
   },
 };
 
@@ -316,7 +413,7 @@ if (shopModal) {
   const mChips = $("#modalChips");
   const mWa = $("#modalWa");
 
-  mImg.addEventListener("error", () => { if (!mImg.dataset.fallback) { mImg.dataset.fallback = "1"; mImg.src = "images/producto-4.jpg"; } });
+  mImg.addEventListener("error", () => { if (!mImg.dataset.fallback) { mImg.dataset.fallback = "1"; mImg.src = "images/productos/raicilla_normal-cutout.png"; } });
 
   const openShopModal = (slug) => {
     const p = PRODUCTOS[slug];
@@ -361,6 +458,14 @@ if (stepNav && stepsFlow) {
   const stepItems = $$(".steps-nav__item", stepNav);
   const steps = $$(".step", stepsFlow);
 
+  const centerNav = (nav, item) => {
+    if (!item) return;
+    const iRect = item.getBoundingClientRect();
+    const nRect = nav.getBoundingClientRect();
+    const left = nav.scrollLeft + (iRect.left - nRect.left) - (nRect.width - iRect.width) / 2;
+    nav.scrollTo({ left, behavior: "smooth" });
+  };
+
   /* Click en la píldora → desplaza hasta el paso */
   stepItems.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -374,7 +479,11 @@ if (stepNav && stepsFlow) {
     entries.forEach((e) => {
       if (!e.isIntersecting) return;
       const n = e.target.id.replace("step-", "");
-      stepItems.forEach((b) => b.classList.toggle("is-active", b.dataset.step === n));
+      stepItems.forEach((b) => {
+        const active = b.dataset.step === n;
+        b.classList.toggle("is-active", active);
+        if (active) centerNav(stepNav, b);
+      });
     });
   }, { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
   steps.forEach((s) => spy.observe(s));
@@ -411,3 +520,48 @@ if (stepNav && stepsFlow) {
     video.addEventListener("ended", close);
   });
 }
+
+/* ============ BUSCADOR DE PRODUCTOS ============ */
+(function () {
+  if (!document.body.classList.contains("page-productos")) return;
+  const input = $("#productSearch");
+  if (!input) return;
+  const clear = $("#searchClear");
+  const groups = $$(".shopgroup");
+  const cards = $$(".shopcard[data-slug]");
+  const empty = document.createElement("p");
+  empty.className = "psearch__empty";
+  empty.textContent = "No encontramos productos con ese nombre. Prueba con otro término.";
+  $(".products .container").append(empty);
+
+  const normalize = (s) =>
+    s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+
+  function apply() {
+    const q = normalize(input.value);
+    let any = false;
+    cards.forEach((card) => {
+      const key = normalize((card.dataset.slug + " " + (card.querySelector("h3")?.textContent || "")).replace(/-/g, " "));
+      const show = !q || key.includes(q);
+      card.classList.toggle("is-hidden", !show);
+      card.hidden = !show;
+      if (show) any = true;
+    });
+    groups.forEach((g) => {
+      const visibles = g.querySelectorAll(".shopcard[data-slug]:not([hidden])").length;
+      g.classList.toggle("is-hidden", visibles === 0);
+      g.hidden = visibles === 0;
+    });
+    empty.hidden = any;
+    empty.classList.toggle("is-visible", !any);
+    input.parentElement.classList.toggle("has-text", input.value.length > 0);
+  }
+
+  input.addEventListener("input", apply);
+  clear.addEventListener("click", () => {
+    input.value = "";
+    apply();
+    input.focus();
+  });
+  apply();
+})();

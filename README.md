@@ -1,4 +1,4 @@
-# Raicilla Hnos. Arrizón — Sitio web
+﻿# Raicilla Hnos. Arrizón — Sitio web
 
 Sitio multi-página (HTML + CSS + JS puros, sin frameworks) con estilos
 (`css/styles.css`) e interacciones (`js/main.js`). Diseño artesanal-premium,
@@ -12,6 +12,12 @@ Páginas:
 - `productos.html` → Productos: 3 destilados con notas sensoriales y 8 ponches.
 - `proceso.html` → Proceso: 8 pasos del agave maximiliana + sostenibilidad.
 - `contacto.html` → Contacto: WhatsApp, tour, mapa y formulario.
+- `tour.html` → Página oculta del Tour a La Vieja (no aparece en el menú; se accede
+  desde la tarjeta "Visita la Taberna" de `productos.html`).
+- `aviso-privacidad.html` → Aviso de privacidad (LFPDPPP). Solo enlace en el footer.
+- `aviso-legal.html` → Aviso legal (restricción de edad, consumo responsable,
+  propiedad intelectual). Solo enlace en el footer.
+
 
 La navegación es la misma en todas (navbar + footer + botón flotante de WhatsApp)
 y `js/main.js` activa solo lo que existe en cada página.
@@ -39,9 +45,9 @@ Todo está centralizado en **`js/main.js`**, arriba, en el objeto `CONTACT`:
 |---|---|---|
 | WhatsApp | `523881058508` (+52 388 105 8508) | Verificar número |
 | Teléfono | +52 388 105 5998 | Verificar |
-| Correo | `raicillahnosarrizon@gmail.com` | Reemplazar por el correo real |
-| Instagram | `https://www.instagram.com/hnos.arrizon` | Reemplazar por el handle real |
-| TikTok | `https://www.tiktok.com/@hnos.arrizon` | Reemplazar por el handle real |
+| Correo | `hnos.arrizon.raicilla@gmail.com` | Ya es el oficial |
+| Instagram | `https://www.instagram.com/hnos_arrizon/` | Ya es el oficial |
+| TikTok | `https://www.tiktok.com/@hnos_arrizon` | Ya es el oficial |
 | Facebook | `https://www.facebook.com/Hnos.Arrizon` | Ya es el oficial |
 
 La **frase principal** está en el hero de `index.html` (sección `hero__title`).
@@ -99,8 +105,7 @@ Cada tarjeta (`article.hcard`) muestra una foto, el año y un texto:
 Coloca la foto en `images/` y cambia `src`, `alt` y `hcard__year`. No importa
 cuántas tarjetas haya: el bucle infinito funciona con cualquiera. Las fotos de
 ejemplo usan imágenes ya existentes: `botella_cristalino.jpg`, `agave1.jpg`,
-`fondo.jpeg`, `maestros.jpg`, `botella 2.jpg`, `logo.png`, `agave 4.jpg` y
-`producto-2.jpg`.
+`fondo.jpeg`, `maestros.jpg`, `botella 2.jpg`, `logo.png` y `agave 4.jpg`.
 
 Para cambiar la velocidad del autoplay, busca `AUTOPLAY_MS` (milisegundos) en el
 bloque "CARRUSEL HISTORIA" de `js/main.js`. Pon `0` para desactivarlo.
@@ -130,6 +135,10 @@ historia.html    → cronología, maestros y valores
 productos.html   → destilados y ponches
 proceso.html     → 8 pasos de elaboración + sostenibilidad
 contacto.html    → WhatsApp, tour, mapa y formulario
+tour.html        → página oculta del tour (sin enlace en menú; desde la tarjeta en productos.html)
+aviso-privacidad.html → aviso de privacidad (LFPDPPP; enlace en el footer)
+aviso-legal.html → aviso legal (18+, consumo responsable, propiedad intelectual; enlace en el footer)
+404.html          → página de error (noindex; GitHub Pages la sirve automáticamente)
 css/styles.css   → diseño y animaciones (compartido)
 js/main.js       → age gate, scroll, WhatsApp, formulario, carrusel
 images/          → fotos de la marca y fondos
@@ -156,18 +165,23 @@ de `robots.txt` y `sitemap.xml`.
 
 Antes de subirlo a producción:
 
-1. **Reemplaza `https://TU-DOMINIO.com`** por el dominio real en **las 5 páginas**
+1. **Dominio real**: `https://arrizon.mx` ya está configurado en las 8 páginas
    (canonical, `og:url`, `og:image`, JSON-LD) y en `robots.txt`/`sitemap.xml`.
-2. **Comprime `images/fondo.jpeg`** (pesa ~2.6 MB). Es la imagen LCP del hero;
-   idealmente debe pesar < 300 KB (puedes usar Squoosh, TinyPNG o `ffmpeg`).
+   Verifica en GitHub Pages (o el hosting elegido) que el dominio apunte aquí y que
+   las URLs funcionen con HTTPS.
+2. **Imágenes optimizadas** (hecho): `images/fondo.jpeg` pasó de 2.6 MB a 403 KB
+   (LCP del hero), los fondos de `images/fondos/` y las fotos de `images/proceso/`
+   se re-comprimieron, y los cutouts de productos se sirven en **WebP** con fallback
+   PNG (`<picture>`). La carpeta pasó de 68.9 MB a 12.2 MB. Si cambias fotos,
+   procura mantener ese peso (Squoosh/TinyPNG).
 3. **Agrega la foto de Sandra** como `images/sandra.jpg` (la referencia ya existe
    en la sección "Maestros" de `historia.html` y hoy queda rota).
 4. Registra el sitio en **Google Search Console** y **Bing Webmaster Tools**,
    y envía `sitemap.xml`.
 5. Conecta **Google Analytics 4** (o Plausible/GA4 alternativo) antes del lanzamiento.
 6. Revisa los `alt` de las imágenes y añade los que falten si cambias fotos.
-7. Verifica el handle real de **Instagram/TikTok** en `js/main.js` (`CONTACT`)
-   y el **correo real** en `contacto.html` y `js/main.js` (hoy el correo
-   `correo@tu-dominio.com` en `contacto.html` es un placeholder).
-8. El horario de la Taberna está en el JSON-LD (10:00–18:00, 7 días). Ajústalo
-   en `index.html` si es diferente.
+7. Verifica que el **canonical** y los enlaces apunten a `arrizon.mx` una vez
+   publicado, y que el correo/handles (Instagram, TikTok, WhatsApp) sean los
+   oficiales (ya actualizados en `js/main.js` y `contacto.html`).
+
+
